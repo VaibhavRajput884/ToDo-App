@@ -21,15 +21,10 @@ const todoSchema = mongoose.Schema({
     enum: ["Official", "Personal", "Hobby"],
     required: true,
   },
-
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   dueDate: {
     type: Date,
     required: true,
   },
-});
+},{timestamps: true});
 
 export default mongoose.model("Todo", todoSchema);

@@ -7,8 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "./partials/header";
 function Register() {
   const [form, setForm] = useState({
-    name: "",
-    username: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -35,7 +35,7 @@ function Register() {
 
       if (result.data.status === 200) {
         localStorage.setItem("user", JSON.stringify(result.data.data));
-        navigation();
+        navigation('/');
         return;
       }
       if (result.data.status === 202) {
@@ -59,32 +59,32 @@ function Register() {
             </div>
             <div className="card-body">
               <div className="form-group">
-                <label className="col-form-label mt-4">Full Name</label>
+                <label className="col-form-label mt-4">First Name</label>
                 <input
                   type="text"
-                  name="name"
+                  name="firstName"
                   onChange={handleInputChange}
                   className="form-control"
-                  placeholder="Enter Full Name"
+                  placeholder="Enter First Name"
                 />
-                {errors?.name && (
+                {errors?.firstName && (
                   <small className="form-text text-danger">
-                    {errors.name.msg}
+                    {errors.firstName.msg}
                   </small>
                 )}
               </div>
               <div className="form-group">
-                <label className="col-form-label mt-4">Username</label>
+                <label className="col-form-label mt-4">Last Name</label>
                 <input
                   type="text"
-                  name="username"
+                  name="lastName"
                   onChange={handleInputChange}
                   className="form-control"
-                  placeholder="Enter Username"
+                  placeholder="Enter Last Name"
                 />
-                {errors?.username && (
+                {errors?.lastName && (
                   <small className="form-text text-danger">
-                    {errors.username.msg}
+                    {errors.lastName.msg}
                   </small>
                 )}
               </div>

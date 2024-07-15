@@ -2,7 +2,7 @@ import { JWT_TOKEN_SECRET, StatusCode } from "../utils/constants.js";
 import { jsonGenerate } from "../utils/helpers.js";
 import Jwt from "jsonwebtoken";
 
-const AuthMiddleware = (req, res, next) => {
+const ensureAccess  = (req, res, next) => {
   if (req.headers["auth"] === undefined) {
     return res.json(jsonGenerate(StatusCode.AUTH_ERROR, "Access Denied"));
   }
@@ -11,7 +11,6 @@ const AuthMiddleware = (req, res, next) => {
 
   try {
     const decoded = Jwt.verify(token, JWT_TOKEN_SECRET);
-    console.log(decoded);
 
     req.userId = decoded.userId;
 
@@ -23,4 +22,4 @@ const AuthMiddleware = (req, res, next) => {
   }
 };
 
-export default AuthMiddleware;
+export default ensureAccess ;

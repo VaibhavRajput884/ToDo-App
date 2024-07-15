@@ -3,9 +3,10 @@ import { jsonGenerate } from "../utils/helpers.js";
 import { JWT_TOKEN_SECRET, StatusCode } from "../utils/constants.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import User from "../models/user-model.js";
 
-const Login = async (req, res) => {
+const createAccessToken  = async (req, res) => {
+  //Validate request
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res
@@ -19,13 +20,11 @@ const Login = async (req, res) => {
       );
   }
 
-  const { identifier, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    // Find user by either username or email
-    const user = await User.findOne({
-      $or: [{ username: identifier }, { email: identifier }],
-    });
+    // Find user by email
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res
@@ -33,12 +32,12 @@ const Login = async (req, res) => {
         .json(
           jsonGenerate(
             StatusCode.UNPROCESSABLE_ENTITY,
-            "Username, Email, or Password is incorrect"
+            "Email or Password is incorrect"
           )
         );
     }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
+      // Check password
+    const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
 
     if (!passwordMatch) {
       return res
@@ -47,7 +46,7 @@ const Login = async (req, res) => {
           jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Password is incorrect")
         );
     }
-
+     // Generate token
     const token = jwt.sign({ userId: user._id }, JWT_TOKEN_SECRET, {
       expiresIn: "1h",
     });
@@ -59,11 +58,10 @@ const Login = async (req, res) => {
       })
     );
   } catch (error) {
-    console.error("Login error:", error);
     return res
       .status(500)
       .json(jsonGenerate(StatusCode.DATABASE_ERROR, "Server error"));
   }
 };
 
-export default Login;
+export default createAccessToken ;

@@ -1,9 +1,9 @@
 import express from "express";
-import apiRoute, { apiProtected } from "./routes/api.js";
+import apiRoute, { apiProtected } from "./routes/api-routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import AuthMiddleware from "./middleware/Auth.js";
+import ensureAccess  from "./middleware/account-auth.js";
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ const PORT = 8000;
 app.use(cors());
 app.use(express.json());
 app.use("/api/", apiRoute);
-app.use("/api/", AuthMiddleware, apiProtected);
+app.use("/api/", ensureAccess, apiProtected);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

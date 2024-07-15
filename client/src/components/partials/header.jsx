@@ -11,7 +11,7 @@ function Header({ searchText, setSearchText }) {
   }, []);
   const handleLogout = () => {
     localStorage.clear();
-    navigation("/login");
+    navigation("/access-token");
   };
   return (
     <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -52,12 +52,12 @@ function Header({ searchText, setSearchText }) {
             ) : (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">
+                  <Link className="nav-link" to="/access-token">
                     Login
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/register">
+                  <Link className="nav-link" to="/accounts">
                     Register
                   </Link>
                 </li>
@@ -74,7 +74,7 @@ function Header({ searchText, setSearchText }) {
                 onChange={(e) => setSearchText(e.target.value)}
                 spellCheck="false"
                 data-ms-editor="true"
-                style={{ color: "black" }}
+                style={{ color: "white" }}
               />
               <button className="btn btn-secondary my-2 my-sm-0" type="submit">
                 Search

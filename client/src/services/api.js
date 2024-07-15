@@ -11,67 +11,70 @@ import {
   TODO_LIST,
 } from "./api-constants";
 
+//login api
 export const login = async (data) => {
   return axios.post(LOGIN, data);
 };
-//registe api
+//register api
 export const register = async (data) => {
   return axios.post(REGISTER, data);
 };
+//Create Todo Api
 export const createTodoApi = async (data) => {
   let token = getToken();
-  console.log(token, "token");
   return axios.post(CREATE_TODO, data, {
     headers: {
       auth: token,
     },
   });
 };
+//Update Todo Api
 export const updateTodoApi = async (data) => {
   const token = getToken();
 
   try {
-    const response = await axios.post(EDIT_TODO, data, {
+    const response = await axios.put(EDIT_TODO, data, {
       headers: {
         auth: token,
       },
     });
     return response.data;
   } catch (error) {
-    console.error("Error updating todo:", error);
     throw error;
   }
 };
 
+//Get todos API
 export const getTodoListApi = async (data) => {
   let token = getToken();
-  console.log(token, "token");
   return axios.get(TODO_LIST, {
     headers: {
       auth: token,
     },
   });
 };
-
+//Delete Todo Api
 export const deleteTodoApi = async (data) => {
   let token = getToken();
-  console.log(token, "token");
-  return axios.post(DELETE_TODO, data, {
+  return axios.delete(DELETE_TODO, {
     headers: {
       auth: token,
     },
+    data:data,
   });
 };
 
+//markTodos
 export const markTodoApi = async (data) => {
   let token = getToken();
-  return axios.post(MARK_TODO, data, {
+  return axios.patch(MARK_TODO, data, {
     headers: {
       auth: token,
     },
   });
 };
 
+//FilterTodos by id
 export const filterTodosApi = async (filter, status) => {
   const token = getToken();
   try {
@@ -82,11 +85,12 @@ export const filterTodosApi = async (filter, status) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching filtered todos:", error);
     throw error;
   }
 };
 
+
+//Get token.
 export function getToken() {
   let user = localStorage.getItem("user");
   if (!user) return;

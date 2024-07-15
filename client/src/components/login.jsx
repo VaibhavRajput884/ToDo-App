@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { login } from "../services/api";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./partials/header";
@@ -8,7 +8,7 @@ import Header from "./partials/header";
 function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    identifier: "",
+    email: "",
     password: "",
   });
   useEffect(() => {
@@ -27,7 +27,6 @@ function Login() {
   const handleSubmit = async () => {
     try {
       const result = await login(form);
-      console.log("form", result);
       setErrors(null);
 
       if (result.status === 200) {
@@ -48,7 +47,6 @@ function Login() {
         toast("Something went wrong, please try again");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
       toast("An error occurred while logging in. Please try again.");
     }
   };
@@ -65,21 +63,21 @@ function Login() {
               <h4 className="card-title">Login Now</h4>
               <form>
                 <div className="form-group">
-                  <label htmlFor="identifier" className="form-label mt-4">
-                    Email or Username
+                  <label htmlFor="email" className="form-label mt-4">
+                    Email
                   </label>
                   <input
                     type="text"
                     onChange={handleChange}
-                    name="identifier"
+                    name="email"
                     className="form-control"
-                    id="identifier"
-                    aria-describedby="identifierHelp"
+                    id="email"
+                    aria-describedby="emailHelp"
                     placeholder="Enter Email or Username"
                   />
-                  {errors?.identifier && (
-                    <small id="identifierHelp" className="form-text text-muted">
-                      {errors.identifier.msg}
+                  {errors?.email && (
+                    <small id="emailHelp" className="form-text text-muted">
+                      {errors.email.msg}
                     </small>
                   )}
                 </div>
@@ -118,7 +116,7 @@ function Login() {
                 <div className="alert alert-danger mt-3">{errors.message}</div>
               )}
               <div className="text-center mt-4">
-                <Link to="/register">Not registered? Sign up here</Link>
+                <Link to="/accounts">Not registered? Sign up here</Link>
               </div>
             </div>
           </div>

@@ -15,7 +15,7 @@ function Home() {
 
   useEffect(() => {
     if (!getToken()) {
-      navigate("/login");
+      navigate("/access-token");
     } else {
       fetchTodoList();
     }
