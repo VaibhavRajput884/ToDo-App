@@ -1,10 +1,10 @@
-import { JWT_TOKEN_SECRET, StatusCode } from "../utils/constants.js";
+import { JWT_TOKEN_SECRET } from "../utils/constants.js";
 import { jsonGenerate } from "../utils/helpers.js";
 import Jwt from "jsonwebtoken";
 
 const ensureAccess  = (req, res, next) => {
   if (req.headers["auth"] === undefined) {
-    return res.json(jsonGenerate(StatusCode.AUTH_ERROR, "Access Denied"));
+    return res.status(401).json(jsonGenerate(401, "Access Denied"));
   }
 
   const token = req.headers["auth"];
@@ -16,9 +16,7 @@ const ensureAccess  = (req, res, next) => {
 
     return next();
   } catch (error) {
-    return res.json(
-      jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Invalid Token")
-    );
+    return res.status(422).json(jsonGenerate(422, "Invalid Token"));
   }
 };
 

@@ -74,7 +74,7 @@ function Header({ searchText, setSearchText }) {
                 onChange={(e) => setSearchText(e.target.value)}
                 spellCheck="false"
                 data-ms-editor="true"
-                style={{ color: "white" }}
+                style={{ color: "black" }}
               />
               <button className="btn btn-secondary my-2 my-sm-0" type="submit">
                 Search

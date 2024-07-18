@@ -1,5 +1,5 @@
 import { check } from "express-validator";
-export const RegisterSchema = [
+const RegisterSchema = [
   check("firstName", "First Name is required").exists().notEmpty().trim(),
   check("lastName", "Last Name is required").exists().notEmpty().trim(),
   check("email", "Email is required").exists().isEmail().trim(),
@@ -8,3 +8,4 @@ export const RegisterSchema = [
     .isLength({ min: 6 })
     .trim(),
 ];
+export default RegisterSchema;

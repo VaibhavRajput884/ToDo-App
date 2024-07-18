@@ -28,9 +28,9 @@ function AddTodo({ setRefreshList }) {
   };
 
   return (
-    <div className="modal mt-5" id="exampleModal">
+    <div className="modal mt-5 " id="exampleModal">
       <div className="modal-dialog" role="document">
-        <div className="modal-content">
+        <div className="modal-content bg-light">
           <div className="modal-header">
             <div className="modal-title">Add new Todo</div>
             <button

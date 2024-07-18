@@ -11,6 +11,8 @@ function Login() {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState(null);
+
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -18,17 +20,22 @@ function Login() {
     }
   }, []);
 
-  const [errors, setErrors] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+  
   const handleSubmit = async () => {
+    // Validate form fields
+    if (!form.email || !form.password) {
+      toast("Email and password are required");
+      return;
+    }
+  
     try {
       const result = await login(form);
       setErrors(null);
-
+  
       if (result.status === 200) {
         if (result.data.status === 200) {
           localStorage.setItem("user", JSON.stringify(result.data.data));
@@ -50,7 +57,9 @@ function Login() {
       toast("An error occurred while logging in. Please try again.");
     }
   };
+  
 
+  
   return (
     <>
       <Header />
@@ -58,7 +67,7 @@ function Login() {
       <div className="container">
         <ToastContainer />
         <div className="row justify-content-center mt-4">
-          <div className="col-lg-5 card border-primary mt-4">
+          <div className="col-lg-5 card bg-light border-primary mt-4">
             <div className="card-body">
               <h4 className="card-title">Login Now</h4>
               <form>

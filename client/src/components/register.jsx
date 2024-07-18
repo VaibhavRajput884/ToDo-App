@@ -53,7 +53,7 @@ function Register() {
       <div className="container">
         <ToastContainer />
         <div className="row justify-content-md-center mt-4">
-          <div className="col-lg-5 card border-primary mb-3">
+          <div className="col-lg-5 card bg-light border-primary mb-3">
             <div className="card-header h4 text-center">
               Register an Account
             </div>

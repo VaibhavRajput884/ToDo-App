@@ -1,20 +1,16 @@
 import { validationResult } from "express-validator";
 import Todo from "../models/todo-model.js";
 import User from "../models/user-model.js";
-import { StatusCode } from "../utils/constants.js";
 import { jsonGenerate } from "../utils/helpers.js";
 
 //CreateTodo
 export const createTodo = async (req, res) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    return res.json(
-      jsonGenerate(
-        StatusCode.VALIDATION_ERROR,
-        "Todo is required",
-        error.mapped()
-      )
-    );
+    return res.status(400).json({
+      success: false,
+      error: error.array(),
+    });
   }
   try {
     const result = await Todo.create({
@@ -25,24 +21,16 @@ export const createTodo = async (req, res) => {
       dueDate: req.body.dueDate,
     });
     if (result) {
-      const user = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { _id: req.userId },
         {
           $push: { todos: result },
         }
       );
-      return res.json(
-        jsonGenerate(StatusCode.SUCCESS, "Todo created Succssfully", result)
-      );
+      return res.json(jsonGenerate(200, result));
     }
   } catch (error) {
-    return res.json(
-      jsonGenerate(
-        StatusCode.UNPROCESSABLE_ENTITY,
-        "Something went wrong",
-        error
-      )
-    );
+    return res.status(422).json(jsonGenerate(422, error));
   }
 };
 
@@ -50,15 +38,10 @@ export const createTodo = async (req, res) => {
 export const updateTodo = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res
-      .status(400)
-      .json(
-        jsonGenerate(
-          StatusCode.VALIDATION_ERROR,
-          "Validation error",
-          errors.array()
-        )
-      );
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
   }
 
   try {
@@ -70,18 +53,12 @@ export const updateTodo = async (req, res) => {
     );
 
     if (!updatedTodo) {
-      return res
-        .status(404)
-        .json(jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Todo not found"));
+      return res.status(404).json(jsonGenerate(422));
     }
 
-    return res.json(
-      jsonGenerate(StatusCode.SUCCESS, "Todo updated successfully", updatedTodo)
-    );
+    return res.json(jsonGenerate(200, updatedTodo));
   } catch (error) {
-    return res
-      .status(500)
-      .json(jsonGenerate(StatusCode.DATABASE_ERROR, "Server error"));
+    return res.status(500).json(jsonGenerate(500));
   }
 };
 
@@ -90,13 +67,10 @@ export const deleteTodo = async (req, res) => {
   const error = validationResult(req);
 
   if (!error.isEmpty()) {
-    return res.json(
-      jsonGenerate(
-        StatusCode.VALIDATION_ERROR,
-        "todo id is required",
-        error.mapped()
-      )
-    );
+    return res.status(400).json({
+      success: false,
+      error: error.array(),
+    });
   }
 
   try {
@@ -106,17 +80,15 @@ export const deleteTodo = async (req, res) => {
     });
 
     if (result) {
-      const user = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { _id: req.userId },
         { $pull: { todos: req.body.todo_id } }
       );
 
-      return res.json(jsonGenerate(StatusCode.SUCCESS, "Todo deleted", null));
+      return res.json(jsonGenerate(200, null));
     }
   } catch (error) {
-    return res.json(
-      jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Could not delete", null)
-    );
+    return res.json(jsonGenerate(422, "Could not delete", null));
   }
 };
 
@@ -124,13 +96,7 @@ export const toggleCompleteStatus = async (req, res) => {
   const error = validationResult(req);
 
   if (!error.isEmpty()) {
-    return res.json(
-      jsonGenerate(
-        StatusCode.VALIDATION_ERROR,
-        "todo id is requied",
-        error.mapped()
-      )
-    );
+    return res.status(400).json(jsonGenerate(400, error.mapped()));
   }
 
   try {
@@ -152,12 +118,10 @@ export const toggleCompleteStatus = async (req, res) => {
     );
 
     if (todo) {
-      return res.json(jsonGenerate(StatusCode.SUCCESS, "Updated", todo));
+      return res.json(jsonGenerate(200, todo));
     }
   } catch (error) {
-    return res.json(
-      jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Could not update", null)
-    );
+    return res.status(422).json(jsonGenerate(422, error));
   }
 };
 
@@ -169,11 +133,11 @@ export const getTodos = async (req, res) => {
       .populate("todos")
       .exec();
 
-    return res.json(jsonGenerate(StatusCode.SUCCESS, "All todo list", list));
+    return res.json(jsonGenerate(200, "All todo list", list));
   } catch (error) {
-    return res.json(
-      jsonGenerate(StatusCode.UNPROCESSABLE_ENTITY, "Error", error)
-    );
+    return res
+      .status(422)
+      .json(jsonGenerate(422, "Error fetching todos", error));
   }
 };
 
