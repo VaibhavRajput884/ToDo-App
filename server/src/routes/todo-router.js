@@ -2,7 +2,6 @@ import express from "express";
 import {
   createTodo,
   deleteTodo,
-  filterTodos,
   toggleCompleteStatus,
   updateTodo,
   getTodos,
@@ -16,6 +15,5 @@ router.put("/:id", ensureAccess, updateTodo);
 router.get("/", ensureAccess, getTodos);
 router.delete("/:id", ensureAccess, deleteTodo);
 router.patch("/:id/status", ensureAccess, toggleCompleteStatus);
-router.get("/:id", ensureAccess, filterTodos);
 
 export default router;

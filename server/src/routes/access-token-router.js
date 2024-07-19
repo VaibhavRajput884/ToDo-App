@@ -4,6 +4,6 @@ import createAccessToken from "../controllers/access-token-controller.js";
 
 const router = express.Router();
 
-router.post("/access-token", LoginSchema, createAccessToken);
+router.post("/access-tokens", LoginSchema, createAccessToken);
 
 export default router;

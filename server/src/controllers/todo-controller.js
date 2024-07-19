@@ -27,7 +27,7 @@ export const createTodo = async (req, res) => {
           $push: { todos: result },
         }
       );
-      return res.json(jsonGenerate(200, result));
+      return res.status(201).json(jsonGenerate(201, result));
     }
   } catch (error) {
     return res.status(422).json(jsonGenerate(422, error));
@@ -85,12 +85,14 @@ export const deleteTodo = async (req, res) => {
         { $pull: { todos: req.body.todo_id } }
       );
 
-      return res.json(jsonGenerate(200, null));
+      return res.status(204).json(jsonGenerate(204, null));
     }
   } catch (error) {
     return res.json(jsonGenerate(422, "Could not delete", null));
   }
 };
+
+// Toggle Complete Status
 
 export const toggleCompleteStatus = async (req, res) => {
   const error = validationResult(req);
@@ -125,28 +127,13 @@ export const toggleCompleteStatus = async (req, res) => {
   }
 };
 
-//Get all todos
+// Get all Todos (with filtering)
 export const getTodos = async (req, res) => {
-  try {
-    const list = await User.findById(req.userId)
-      .select("-password")
-      .populate("todos")
-      .exec();
-
-    return res.json(jsonGenerate(200, "All todo list", list));
-  } catch (error) {
-    return res
-      .status(422)
-      .json(jsonGenerate(422, "Error fetching todos", error));
-  }
-};
-
-//Filter Todos
-export const filterTodos = async (req, res) => {
   try {
     const { filter, status } = req.query;
     const userId = req.userId;
     let todos;
+
     // Filter based on query parameters
     if (filter === "overdue") {
       todos = await Todo.find({
@@ -157,11 +144,11 @@ export const filterTodos = async (req, res) => {
     } else if (filter === "status") {
       todos = await Todo.find({ userId, isCompleted: status === "done" });
     } else {
-      todos = await Todo.find({ userId, isCompleted: false });
+      todos = await Todo.find({ userId });
     }
 
-    res.status(200).json({ status: 200, data: { todos } });
+    return res.json(jsonGenerate(200, todos));
   } catch (error) {
-    res.status(500).json({ status: 500, message: error.message });
+    return res.status(422).json(jsonGenerate(422, error));
   }
 };
